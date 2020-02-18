@@ -8,9 +8,9 @@ import yaml
 from .client import BinanceClient
 
 
-here = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-with open(os.path.join(here, 'VERSION')) as f:
-    __version__ = f.read().strip()
+# here = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+# with open(os.path.join(here, 'VERSION')) as f:
+#     __version__ = f.read().strip()
 __author__ = 'c0lon'
 __email__ = ''
 
