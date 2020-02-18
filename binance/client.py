@@ -38,7 +38,8 @@ from .utils import GetLoggerMixin
 API_BASE_URL = 'https://www.binance.com'
 
 WEBSOCKET_BASE_URL = 'wss://stream.binance.com:9443/ws/{symbol}'
-DEPTH_WEBSOCKET_URL = '{}@depth'.format(WEBSOCKET_BASE_URL)
+# https://www.binance.com/en/support/articles/360032916632
+DEPTH_WEBSOCKET_URL = '{}@depth{levels}@{update_speed}ms'.format(WEBSOCKET_BASE_URL)
 KLINE_WEBSOCKET_URL = '{}@kline'.format(WEBSOCKET_BASE_URL)
 
 CONTENT_TYPE = 'x-www-form-urlencoded'
@@ -202,7 +203,7 @@ class BinanceClient(GetLoggerMixin):
 
         return depth
 
-    def watch_depth(self, symbol):
+    def watch_depth(self, symbol, levels=20, update_speed=100):
         self._logger('watch_depth').info(symbol)
 
         cache = self.depth_cache.get(symbol)
@@ -213,7 +214,7 @@ class BinanceClient(GetLoggerMixin):
         async def _watch_for_depth_events():
             logger = self._logger('_watch_for_depth_events')
 
-            url = DEPTH_WEBSOCKET_URL.format(symbol=symbol.lower())
+            url = DEPTH_WEBSOCKET_URL.format(symbol=symbol.lower(), levels=levels, update_speed=update_speed)
             logger.debug(f'opening websocket connection: {url}')
             async with ws.connect(url) as socket:
                 while True:
@@ -282,7 +283,7 @@ class BinanceClient(GetLoggerMixin):
         await self._handle_callback(kwargs.get('callback'), candlesticks)
 
         return candlesticks
-        
+
     async def _handle_callback(self, callback, *values):
         if not callback:
             return
@@ -368,7 +369,7 @@ class BinanceClient(GetLoggerMixin):
         self._logger('get_order_status').info(f'{symbol}: {order_id}')
         raw_order = self._make_request(Endpoints.ORDER, signed=True,
                 params={'symbol' : symbol, 'orderId' : order_id})
-        
+
         return Order(raw_order)
 
     def cancel_order(self, symbol, order_id):
