@@ -39,7 +39,7 @@ API_BASE_URL = 'https://www.binance.com'
 
 WEBSOCKET_BASE_URL = 'wss://stream.binance.com:9443/ws/{symbol}'
 # https://www.binance.com/en/support/articles/360032916632
-DEPTH_WEBSOCKET_URL = '{base_url}@depth{levels}@{update_speed}ms'.format(base_url=WEBSOCKET_BASE_URL)
+DEPTH_WEBSOCKET_URL = '{base_url}@depth{{levels}}@{{update_speed}}ms'.format(base_url=WEBSOCKET_BASE_URL)
 KLINE_WEBSOCKET_URL = '{}@kline'.format(WEBSOCKET_BASE_URL)
 
 CONTENT_TYPE = 'x-www-form-urlencoded'
